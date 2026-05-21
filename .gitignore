@@ -19,6 +19,8 @@ LaTeX/*.toc
 LaTeX/*.fls
 LaTeX/*.fdb_latexmk
 LaTeX/*.synctex.gz
+LaTeX/*.bbl
+LaTeX/*.blg
 LaTeX/sections/*.aux
 output/*.aux
 output/*.log
