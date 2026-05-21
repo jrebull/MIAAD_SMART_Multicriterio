@@ -1,0 +1,26 @@
+{
+  "seed": 1,
+  "n_soluciones_frente": 100,
+  "hipervolumen": 8275.4031,
+  "hv_ref_point": [
+    200.0,
+    50.0
+  ],
+  "spacing": 0.9774,
+  "extremos": {
+    "min_f1": 0.0,
+    "max_f1": 200.0,
+    "min_f2": 0.0,
+    "max_f2": 50.0
+  },
+  "pesos_ponderada": [
+    0.7,
+    0.3
+  ],
+  "parametros": {
+    "pop_size": 100,
+    "n_gen": 100,
+    "algoritmo_aposteriori": "NSGA-II",
+    "algoritmo_apriori": "GA"
+  }
+}

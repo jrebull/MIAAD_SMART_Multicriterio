@@ -1,0 +1,32 @@
+{
+  "post_ponderada": {
+    "estrategia": "A Posteriori — Suma Ponderada",
+    "f1_costo": 20.1774,
+    "f2_tiempo": 23.3165,
+    "indice_frente": 54
+  },
+  "post_lexico": {
+    "estrategia": "A Posteriori — Lexicográfica (prioridad f2)",
+    "f1_costo": 200.0,
+    "f2_tiempo": 0.0,
+    "indice_frente": 0
+  },
+  "apriori_pond": {
+    "estrategia": "A Priori — GA Ponderado",
+    "f1_costo": 17.9985,
+    "f2_tiempo": 24.5009,
+    "x": [
+      1.4998,
+      1.5001
+    ]
+  },
+  "apriori_lex": {
+    "estrategia": "A Priori — GA Lexicográfico (sólo f2)",
+    "f1_costo": 200.0,
+    "f2_tiempo": 0.0,
+    "x": [
+      5.0,
+      5.0
+    ]
+  }
+}
