@@ -4,7 +4,7 @@
 \usepackage{amsmath}
 \usepackage[spanish,mexico]{babel}
 \usepackage{mathpazo}              % Palatino para texto + matemáticas
-\usepackage[margin=2.5cm]{geometry}
+\usepackage[margin=2.5cm,headheight=24pt]{geometry}
 \usepackage{graphicx}
 % Rutas múltiples: repo local (../Figures/) y zip plano de Overleaf (figures/).
 \graphicspath{{../Figures/}{figures/}{Figures/}{./}}
@@ -97,6 +97,9 @@
 {\small\color{uacjgris} Reporte reproducible: todos los valores numéricos provienen de
 \texttt{results/selected\_solutions.json} y \texttt{results/metrics.json}\par}
 \end{titlepage}
+% titlepage reinicia el contador a 1; lo avanzamos para que el índice no
+% reuse el ancla PDF "page.1" (warning de destinos duplicados en hyperref).
+\setcounter{page}{2}
 
 % ====================== ÍNDICE ======================
 \tableofcontents
