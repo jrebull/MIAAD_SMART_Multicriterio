@@ -9,6 +9,14 @@ frente de Pareto aproximado por NSGA-II. Reutiliza la lógica de src/.
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+# Hacer importable el paquete src/ sin depender del cwd ni del lanzador.
+ROOT = Path(__file__).resolve().parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
@@ -105,7 +113,7 @@ fig.update_layout(
 )
 fig.update_xaxes(showgrid=True, gridcolor="#e8e8e8")
 fig.update_yaxes(showgrid=True, gridcolor="#e8e8e8")
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width="stretch")
 
 # --- Tabla comparativa ----------------------------------------------------
 st.subheader("Tabla comparativa")
@@ -115,7 +123,7 @@ tabla = pd.DataFrame([
     ["A Priori", "GA Ponderado", apri_pond[0], apri_pond[1]],
     ["A Priori", "GA Lexicográfico", apri_lex[0], apri_lex[1]],
 ], columns=["Enfoque", "Criterio", "f₁ (Costo)", "f₂ (Tiempo)"])
-st.dataframe(tabla.round(2), use_container_width=True, hide_index=True)
+st.dataframe(tabla.round(2), width="stretch", hide_index=True)
 
 st.info(
     "Mueve el peso del costo: verás que la solución ponderada se desliza por el "

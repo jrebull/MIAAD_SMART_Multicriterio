@@ -6,6 +6,10 @@ set -euo pipefail
 cd "$(dirname "$0")"
 mkdir -p ../output
 
+# Fecha fija en metadatos → PDF byte-reproducible entre compilaciones.
+export SOURCE_DATE_EPOCH=1779321600   # 2026-05-21 UTC
+export FORCE_SOURCE_DATE=1
+
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
 bibtex main
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
