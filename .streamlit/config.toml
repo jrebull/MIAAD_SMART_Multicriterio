@@ -1,0 +1,10 @@
+# Tema institucional UACJ para el dashboard.
+[theme]
+primaryColor = "#003CA6"
+backgroundColor = "#FDFFE2"
+secondaryBackgroundColor = "#F4F6E8"
+textColor = "#1A2130"
+font = "serif"
+
+[browser]
+gatherUsageStats = false

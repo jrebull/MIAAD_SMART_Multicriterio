@@ -61,3 +61,19 @@ se teclea a mano**: `src/export_latex.py` genera las macros LaTeX a partir de
 
 Las soluciones ponderadas coinciden casi exactamente (frente convexo); la
 lexicográfica sacrifica todo el costo (f₁ = 200) por minimizar el tiempo.
+
+## Despliegue web (Streamlit Community Cloud)
+
+El dashboard es autocontenido (recalcula el frente; no depende de `results/`),
+por lo que se despliega directo desde este repo público:
+
+1. Entra a **https://share.streamlit.io** e inicia sesión con GitHub.
+2. **New app** → repo `jrebull/MIAAD_SMART_Multicriterio`, branch `main`,
+   main file `streamlit_app.py`, Python **3.12**.
+3. **Deploy**. La primera build instala dependencias (incluye `pymoo`); tarda
+   unos minutos. La app queda en una URL `https://<nombre>.streamlit.app`.
+
+Atajo con el formulario pre-llenado:
+`https://share.streamlit.io/deploy?repository=jrebull/MIAAD_SMART_Multicriterio&branch=main&mainModule=streamlit_app.py`
+
+El tema institucional UACJ se aplica vía `.streamlit/config.toml`.
