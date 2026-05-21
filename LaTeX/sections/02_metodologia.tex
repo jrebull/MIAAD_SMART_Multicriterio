@@ -1,0 +1,68 @@
+\section{Metodología}
+
+Se implementaron en Python (módulo \texttt{src/}) las dos estrategias de
+decisión sobre el mismo problema bi-objetivo, garantizando reproducibilidad
+bit-a-bit mediante una semilla fija en cada llamada a \texttt{minimize()}.
+
+\subsection{Estrategia A Posteriori: NSGA-II + post-selección}
+
+Se aproxima el frente de Pareto completo con el algoritmo
+NSGA-II~\cite{deb2002nsga2,blank2020pymoo}. Sobre el conjunto de \MetNSol{}
+soluciones no dominadas resultantes, el tomador de decisiones aplica dos
+criterios de selección \emph{a posteriori}:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Suma ponderada normalizada.} Se normaliza cada objetivo al
+        rango $[0,1]$ usando los extremos del frente y se minimiza la
+        combinación $0.7\,\tilde{f_1} + 0.3\,\tilde{f_2}$, otorgando 70\,\% de
+        importancia al costo y 30\,\% al tiempo.
+  \item \textbf{Lexicográfica.} Se prioriza estrictamente el Tiempo ($f_2$):
+        se elige la solución del frente con menor $f_2$.
+\end{itemize}
+
+\subsection{Estrategia A Priori: GA mono-objetivo}
+
+Aquí las preferencias se inyectan \emph{antes} de optimizar, transformando el
+problema en mono-objetivo y resolviéndolo con un GA clásico:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Suma ponderada directa.} Con un \emph{escalamiento manual}
+        aproximado a los rangos de cada objetivo, se minimiza
+        \[
+          g(\mathbf{x}) = 0.7 \cdot \frac{f_1(\mathbf{x})}{200}
+                        + 0.3 \cdot \frac{f_2(\mathbf{x})}{50}.
+        \]
+  \item \textbf{Lexicográfica directa.} Se optimiza únicamente el objetivo
+        prioritario, $f_2$, ignorando por completo a $f_1$ durante la búsqueda.
+\end{itemize}
+
+\subsection{Parámetros de ejecución}
+
+La Tabla~\ref{tab:parametros} resume la configuración. Ambos algoritmos usan el
+mismo tamaño de población y número de generaciones para una comparación justa.
+
+\begin{table}[h]
+  \centering
+  \caption{Parámetros de los algoritmos evolutivos.}
+  \label{tab:parametros}
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Parámetro} & \textbf{A Posteriori (NSGA-II)} & \textbf{A Priori (GA)} \\
+    \midrule
+    Tamaño de población & \num{100} & \num{100} \\
+    Generaciones        & \num{100} & \num{100} \\
+    Semilla             & \MetSeed & \MetSeed \\
+    Objetivos           & 2 ($f_1, f_2$) & 1 (escalar) \\
+    Pesos $(w_1, w_2)$  & $(0.7,\ 0.3)$ & $(0.7,\ 0.3)$ \\
+    Escalamiento        & normalización por rango & manual ($f_1/200,\ f_2/50$) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Métricas de calidad del frente}
+
+Para caracterizar el frente NSGA-II se reportan: el \textbf{hipervolumen}
+(volumen dominado respecto al punto de referencia $(\num{200}, \num{50})$),
+indicador de convergencia y diversidad; y el \textbf{spacing} de
+Schott~\cite{coello2007evolutionary}, que mide la uniformidad de la
+distribución de soluciones a lo largo del frente.

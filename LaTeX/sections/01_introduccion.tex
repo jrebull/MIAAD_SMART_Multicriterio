@@ -1,0 +1,50 @@
+\section{Introducción}
+
+En la optimización del mundo real rara vez existe un único criterio de éxito.
+El presente trabajo analiza un problema \textbf{bi-objetivo} en conflicto,
+inspirado en una decisión logística de ruteo, donde se busca simultáneamente
+\emph{minimizar} dos magnitudes que se contraponen:
+
+\begin{itemize}[noitemsep]
+  \item $f_1$: \textbf{Costo Operativo} de la operación.
+  \item $f_2$: \textbf{Tiempo de Entrega} al cliente.
+\end{itemize}
+
+El objetivo pedagógico no es únicamente resolver el problema, sino comprender
+cómo el \textbf{momento} en que el tomador de decisiones expresa sus
+preferencias altera el resultado final. Contrastamos dos filosofías
+metodológicas~\cite{miettinen1999nonlinear,marler2004survey}:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{A Posteriori}: primero se aproxima \emph{todo} el frente de
+        Pareto (con NSGA-II~\cite{deb2002nsga2}) y, sólo después, el decisor
+        elige una solución sobre el conjunto no dominado.
+  \item \textbf{A Priori}: el decisor inyecta sus preferencias
+        \emph{antes} de optimizar, colapsando el problema bi-objetivo a uno
+        mono-objetivo que se resuelve con un Algoritmo Genético (GA) clásico.
+\end{itemize}
+
+\subsection{Formulación matemática}
+
+El problema continuo, denominado \texttt{RoutingProxyProblem}, se define sobre
+el dominio $\mathbf{x} = (x_1, x_2) \in [0, 5]^2$ como:
+
+\begin{align}
+  \min_{\mathbf{x}} \quad & f_1(\mathbf{x}) = 4x_1^2 + 4x_2^2 \\
+  \min_{\mathbf{x}} \quad & f_2(\mathbf{x}) = (x_1 - 5)^2 + (x_2 - 5)^2 \\
+  \text{s.a.} \quad & 0 \le x_1, x_2 \le 5 . \nonumber
+\end{align}
+
+La tensión es geométrica e intuitiva: $f_1$ se minimiza en el origen
+$\mathbf{x}=(0,0)$, mientras que $f_2$ se minimiza en la esquina opuesta
+$\mathbf{x}=(5,5)$. Ninguna solución puede satisfacer ambos óptimos a la vez,
+lo que da lugar a un frente de Pareto convexo de soluciones de compromiso.
+
+\subsection{Objetivos del reporte}
+
+Este documento responde explícitamente a cuatro preguntas: (1) la
+visualización conjunta de las estrategias; (2) si la \emph{suma ponderada}
+a priori coincide con su análoga a posteriori; (3) qué ocurre con $f_1$ al
+aplicar un criterio \emph{lexicográfico} estricto sobre $f_2$; y (4) una
+recomendación profesional sobre cuándo conviene cada enfoque. Todo el análisis
+es \textbf{reproducible} con semilla fija (\texttt{seed = \MetSeed}).

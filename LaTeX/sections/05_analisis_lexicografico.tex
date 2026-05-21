@@ -1,0 +1,51 @@
+\section{Análisis Lexicográfico (Pregunta 3)}
+
+\textit{Al aplicar la estrategia lexicográfica directa minimizando sólo $f_2$,
+¿qué sucedió con el valor de $f_1$? Compara este valor con el extremo del
+frente de Pareto de NSGA-II.}
+
+\subsection{Qué le ocurrió a $f_1$}
+
+Al optimizar \emph{exclusivamente} el Tiempo ($f_2$), el GA llevó la solución
+a $\mathbf{x} = (\num{\AprioriLexVarUno}, \num{\AprioriLexVarDos})$, donde
+$f_2$ alcanza su mínimo global $\num{\AprioriLexTiempo}$. Pero al ignorar por
+completo al Costo, éste se disparó hasta su \textbf{valor máximo posible} en
+el dominio:
+\[
+  f_1 = \num{\AprioriLexCosto}, \qquad f_2 = \num{\AprioriLexTiempo}.
+\]
+Esto es exactamente lo que predice la teoría: minimizar $f_2 = (x_1-5)^2 +
+(x_2-5)^2$ empuja la solución a la esquina $(5,5)$, que es justamente el punto
+donde $f_1 = 4(25)+4(25) = \num{200}$ es \emph{máximo}. La prioridad rígida
+sobre un objetivo sacrifica por completo al otro.
+
+\subsection{Comparación con el extremo del frente NSGA-II}
+
+El frente aproximado por NSGA-II tiene su extremo de menor tiempo en
+$f_1 = \num{\MetMaxFuno}$, $f_2 = \num{\MetMinFdos}$ (la solución
+\texttt{post\_lexico} de la Tabla~\ref{tab:soluciones}). Como se aprecia en la
+Figura~\ref{fig:zoom}, \textbf{ambos enfoques lexicográficos aterrizan en el
+mismo punto} $(\num{200}, \num{0})$: la decisión lexicográfica a priori y la
+selección lexicográfica a posteriori son indistinguibles aquí, porque ambas
+persiguen el mismo objetivo extremo del frente.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.85\linewidth]{pareto_front_zoom.png}
+  \caption{Zoom al codo del frente. Las soluciones lexicográficas (cuadrado
+  amarillo y marcador negro) coinciden en el extremo $(\num{200}, \num{0})$,
+  el punto de mayor costo del frente.}
+  \label{fig:zoom}
+\end{figure}
+
+\subsection{El costo de la prioridad rígida}
+
+La lección es contundente: pasar de la solución \emph{ponderada}
+($f_1 \approx \num{\AprioriPondCosto}$) a la \emph{lexicográfica}
+($f_1 = \num{\AprioriLexCosto}$) implica multiplicar el costo operativo por un
+factor superior a $\times 10$ a cambio de recortar el tiempo desde
+$\approx \num{\AprioriPondTiempo}$ hasta $\num{\AprioriLexTiempo}$. El enfoque
+lexicográfico es apropiado únicamente cuando el objetivo prioritario es
+verdaderamente \textbf{innegociable} (p.\ ej.\ una restricción regulatoria o
+de seguridad); de lo contrario, ignora compromisos intermedios mucho más
+eficientes que sí captura el frente de Pareto.

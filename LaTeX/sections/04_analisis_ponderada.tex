@@ -1,0 +1,65 @@
+\section{Análisis de la Suma Ponderada (Pregunta 2)}
+
+\textit{¿Existe una diferencia significativa entre la solución encontrada
+calculando los pesos a priori con el GA frente a seleccionarla a posteriori
+del frente de Pareto generado por NSGA-II? Explica por qué coinciden o
+difieren.}
+
+\subsection{Comparación cuantitativa}
+
+\begin{table}[h]
+  \centering
+  \caption{Suma ponderada: A Priori (GA) vs.\ A Posteriori (NSGA-II).}
+  \label{tab:ponderada}
+  \begin{tabular}{lSSS}
+    \toprule
+    & {\textbf{$f_1$ (Costo)}} & {\textbf{$f_2$ (Tiempo)}} & {\textbf{Suma escalada}} \\
+    \midrule
+    A Priori (GA)        & \AprioriPondCosto & \AprioriPondTiempo & {---} \\
+    A Posteriori (NSGA-II)& \PostPondCosto   & \PostPondTiempo    & {---} \\
+    \midrule
+    Diferencia absoluta  & \DiffPondCosto    & \DiffPondTiempo    & {---} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Las dos soluciones son \textbf{muy cercanas pero no idénticas}: difieren en
+apenas $\num{\DiffPondCosto}$ unidades de costo y $\num{\DiffPondTiempo}$
+unidades de tiempo. En la Figura~\ref{fig:scatter} ambos marcadores (estrella
+oro y equis roja) caen prácticamente superpuestos sobre el ``codo'' del frente.
+
+\subsection{Por qué coinciden}
+
+La razón es geométrica. El método de suma ponderada equivale a buscar la
+solución que toca primero una recta de pendiente $-w_1/w_2$ que barre el
+espacio de objetivos. Cuando el frente de Pareto es \textbf{convexo} ---como
+ocurre aquí--- esa recta toca el frente en un único punto bien definido, y
+\emph{cualquier} método que minimice la misma combinación lineal converge
+esencialmente al mismo lugar~\cite{marler2004survey,miettinen1999nonlinear}.
+Por construcción, el problema $f_1 = 4(x_1^2+x_2^2)$, $f_2 = (x_1-5)^2+(x_2-5)^2$
+genera un frente convexo, lo que explica la coincidencia.
+
+De hecho, la solución A Priori converge a $\mathbf{x} \approx
+(\num{\AprioriPondVarUno}, \num{\AprioriPondVarDos})$, que coincide con el
+óptimo analítico exacto $(1.5, 1.5)$ obtenible por simetría e igualación de
+derivadas. El GA recuperó el óptimo teórico sin error apreciable.
+
+\subsection{Por qué difieren levemente}
+
+La pequeña discrepancia se debe a que \textbf{ambos enfoques no minimizan
+exactamente la misma función escalar}:
+
+\begin{itemize}[noitemsep]
+  \item El A Priori usa un \textbf{escalamiento manual fijo} ($f_1/200$,
+        $f_2/50$), denominadores elegidos a ojo según los rangos esperados.
+  \item El A Posteriori \textbf{normaliza por los extremos reales} del frente
+        muestreado, que dependen de las \MetNSol{} soluciones encontradas.
+\end{itemize}
+
+Como los factores de escala difieren, la dirección de preferencia efectiva se
+inclina ligeramente distinto, desplazando el punto seleccionado unas pocas
+unidades. Además, el A Posteriori sólo puede elegir entre los puntos
+\emph{discretos} del frente muestreado, no sobre el continuo. En resumen: no
+hay diferencia \emph{significativa} ---el sesgo del escalamiento manual es
+marginal cuando el frente es convexo--- pero sí una diferencia \emph{medible}
+y explicable.

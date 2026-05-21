@@ -1,0 +1,61 @@
+\section{Resultados}
+
+\subsection{Visualización conjunta de las estrategias}
+
+La Figura~\ref{fig:scatter} presenta el frente de Pareto aproximado por
+NSGA-II (círculos azules) junto con las cuatro soluciones seleccionadas por
+las distintas estrategias. Esta gráfica responde al \textbf{primer entregable}
+del enunciado: la comparación espacial de las decisiones con la leyenda
+visible.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{scatter_estrategias.pdf}
+  \caption{Comparativa de estrategias de decisión multicriterio. El frente de
+  Pareto (NSGA-II) define la curva de soluciones de compromiso. Las dos
+  soluciones \emph{ponderadas} (a priori y a posteriori) caen prácticamente
+  superpuestas en el ``codo'' del frente, mientras que ambas soluciones
+  \emph{lexicográficas} coinciden en el extremo de menor tiempo
+  $(f_1, f_2) \approx (\num{200}, \num{0})$.}
+  \label{fig:scatter}
+\end{figure}
+
+\subsection{Soluciones seleccionadas}
+
+La Tabla~\ref{tab:soluciones} reporta las cuatro soluciones. Todos los valores
+se leen directamente de \texttt{results/\allowbreak selected\_solutions.json}.
+
+\begin{table}[h]
+  \centering
+  \caption{Soluciones obtenidas por cada estrategia de decisión.}
+  \label{tab:soluciones}
+  \begin{tabular}{llSS}
+    \toprule
+    \textbf{Enfoque} & \textbf{Criterio} & {\textbf{$f_1$ (Costo)}} & {\textbf{$f_2$ (Tiempo)}} \\
+    \midrule
+    A Posteriori & Suma Ponderada  & \PostPondCosto    & \PostPondTiempo \\
+    A Posteriori & Lexicográfica   & \PostLexCosto     & \PostLexTiempo \\
+    A Priori     & GA Ponderado    & \AprioriPondCosto & \AprioriPondTiempo \\
+    A Priori     & GA Lexicográfico& \AprioriLexCosto  & \AprioriLexTiempo \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Calidad del frente de Pareto}
+
+El frente aproximado por NSGA-II consta de \MetNSol{} soluciones no dominadas,
+con los siguientes indicadores (de \texttt{results/metrics.json}):
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Hipervolumen} (ref.\ $(\num{200},\num{50})$):
+        \num{\MetHipervolumen}.
+  \item \textbf{Spacing} de Schott: \num{\MetSpacing} (valor bajo $\Rightarrow$
+        distribución uniforme).
+  \item \textbf{Extremos del frente:} $f_1 \in [\num{\MetMinFuno},\ \num{\MetMaxFuno}]$,
+        $f_2 \in [\num{\MetMinFdos},\ \num{\MetMaxFdos}]$.
+\end{itemize}
+
+Los extremos coinciden exactamente con la predicción analítica: el frente va
+de $(\num{0}, \num{50})$ --- correspondiente a $\mathbf{x}=(0,0)$, mínimo costo
+--- hasta $(\num{200}, \num{0})$ --- correspondiente a $\mathbf{x}=(5,5)$,
+mínimo tiempo. Esta concordancia valida numéricamente la implementación.

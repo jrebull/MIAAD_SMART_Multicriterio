@@ -1,0 +1,110 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage[spanish,mexico]{babel}
+\usepackage{mathpazo}              % Palatino para texto + matemáticas
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\graphicspath{{../Figures/}}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\definecolor{uacjazul}{HTML}{003CA6}
+\definecolor{uacjoro}{HTML}{C8962E}
+\definecolor{uacjgris}{HTML}{555559}
+\usepackage[colorlinks=true,linkcolor=uacjazul,citecolor=uacjazul,urlcolor=uacjazul]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{siunitx}
+% Formato mexicano: punto decimal, coma de miles, redondeo a 2 decimales.
+% El bloque se define aquí y se RE-aplica en \AtBeginDocument para imponerse
+% sobre el locale que babel-spanish fija al iniciar el documento.
+\newcommand{\formatomexicano}{%
+  \sisetup{
+    input-decimal-markers = {.},
+    output-decimal-marker = {.},
+    group-separator       = {,},
+    group-minimum-digits  = 4,
+    round-mode            = places,
+    round-precision       = 2,
+  }%
+}
+\formatomexicano
+\AtBeginDocument{\formatomexicano}
+\usepackage{subcaption}
+\usepackage{enumitem}
+
+% --- Valores numéricos generados por el código (NO editar a mano) ---
+\input{valores_generados}
+
+% --- Encabezado / pie de página ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{uacjazul}{MIAAD · Optimización Inteligente}}
+\fancyhead[R]{\small\textcolor{uacjazul}{Análisis Multicriterio}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{uacjazul}\leaders\hrule height \headrulewidth\hfill}}
+
+% --- Estilo de secciones ---
+\titleformat{\section}{\Large\bfseries\color{uacjazul}}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries\color{uacjgris}}{\thesubsection}{0.6em}{}
+
+\title{}
+\date{}
+
+\begin{document}
+
+% ====================== PORTADA ======================
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+\vspace*{1.5cm}
+
+{\color{uacjazul}\rule{\linewidth}{1.2pt}}\\[0.4cm]
+{\color{uacjgris}\large Universidad Autónoma de Ciudad Juárez}\\[0.2cm]
+{\color{uacjgris}\large Maestría en Ingeniería en Análisis y Administración de Datos (MIAAD)}\\[0.5cm]
+{\color{uacjazul}\rule{\linewidth}{1.2pt}}\\[2.0cm]
+
+{\Huge\bfseries\color{uacjazul} Análisis Comparativo de Estrategias de Decisión Multicriterio\par}
+\vspace{0.4cm}
+{\LARGE\color{uacjazul} A Priori vs. A Posteriori\par}
+\vspace{0.8cm}
+{\large\itshape Práctica de Laboratorio --- Optimización Inteligente\par}
+
+\vspace{2.5cm}
+
+\begin{tabular}{rl}
+\textbf{Alumno:} & Javier Augusto Rebull Saucedo \\
+\textbf{Matrícula:} & 263483 \\
+\textbf{Profesor:} & Mtro. Raúl Gibrán Porras Alaniz \\
+\textbf{Materia:} & Optimización Inteligente \\
+\textbf{Programa:} & MIAAD --- UACJ \\
+\textbf{Fecha:} & Mayo de 2026 \\
+\end{tabular}
+
+\vfill
+{\color{uacjoro}\rule{\linewidth}{2pt}}\\[0.3cm]
+{\small\color{uacjgris} Reporte reproducible --- todos los valores numéricos provienen de
+\texttt{results/selected\_solutions.json} y \texttt{results/metrics.json}\par}
+\end{titlepage}
+
+% ====================== ÍNDICE ======================
+\tableofcontents
+\newpage
+
+% ====================== SECCIONES ======================
+\input{sections/01_introduccion}
+\input{sections/02_metodologia}
+\input{sections/03_resultados}
+\input{sections/04_analisis_ponderada}
+\input{sections/05_analisis_lexicografico}
+\input{sections/06_conclusion_profesional}
+
+% ====================== BIBLIOGRAFÍA ======================
+\newpage
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
