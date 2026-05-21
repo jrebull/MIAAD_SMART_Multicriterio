@@ -10,7 +10,7 @@ La pregunta no es ``¿qué algoritmo es mejor?'', sino ``¿qué tan seguro está
 negocio de sus preferencias \emph{antes} de optimizar?''. Mi experiencia en
 banca (Santander US) lo ilustra con dos analogías directas:
 
-\paragraph{Caso A --- Decisión estratégica única (recomiendo NSGA-II).}
+\paragraph{Caso A: decisión estratégica única (recomiendo NSGA-II).}
 Es análogo a definir la estrategia de \textbf{reabastecimiento de cajeros
 (ATMs)}: el costo logístico del traslado de efectivo contra el SLA de
 disponibilidad ante el cliente. Cuando la decisión es de alto impacto, se toma
@@ -22,13 +22,13 @@ disponibilidad?'') en una negociación informada sobre compromisos concretos y
 visibles. El frente es una herramienta de \emph{alineación organizacional},
 no sólo de optimización.
 
-\paragraph{Caso B --- Decisión operativa recurrente (recomiendo A Priori).}
+\paragraph{Caso B: decisión operativa recurrente (recomiendo A Priori).}
 Es análogo a la \textbf{asignación automática de líneas de crédito} o al
 ruteo diario de reabastecimiento: decisiones que se ejecutan miles de veces,
 con pesos ya \emph{aprendidos y estables} (el negocio sabe que prioriza, por
 ejemplo, 70\,\% costo / 30\,\% tiempo). Aquí desplegar NSGA-II en cada corrida
 sería un desperdicio: el enfoque a priori entrega en una fracción del tiempo
-una solución que ---como demostró la Sección 4--- es prácticamente idéntica a
+una solución que, como demostró la Sección 4, es prácticamente idéntica a
 la que se elegiría sobre el frente completo, gracias a la convexidad del
 problema.
 
