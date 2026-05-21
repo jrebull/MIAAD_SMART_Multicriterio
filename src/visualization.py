@@ -94,7 +94,8 @@ def scatter_estrategias(
     png_path = figures_dir / "scatter_estrategias.png"
     pdf_path = figures_dir / "scatter_estrategias.pdf"
     fig.savefig(png_path, dpi=300, bbox_inches="tight")
-    fig.savefig(pdf_path, bbox_inches="tight")
+    # metadata sin fecha → PDF reproducible bit-a-bit entre corridas.
+    fig.savefig(pdf_path, bbox_inches="tight", metadata={"CreationDate": None})
     plt.close(fig)
     return png_path, pdf_path
 
