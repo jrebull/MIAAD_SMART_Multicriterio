@@ -1,0 +1,34 @@
+# Carpeta de prompts personales (no compartir)
+Prompts/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# LaTeX intermedios
+LaTeX/*.aux
+LaTeX/*.log
+LaTeX/*.out
+LaTeX/*.toc
+LaTeX/*.fls
+LaTeX/*.fdb_latexmk
+LaTeX/*.synctex.gz
+LaTeX/sections/*.aux
+output/*.aux
+output/*.log
+output/*.out
+output/*.toc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
