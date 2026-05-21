@@ -82,8 +82,8 @@ def scatter_estrategias(
     )
 
     ax.set_title("Comparativa de Estrategias de Decisión Multicriterio")
-    ax.set_xlabel("f₁: Costo Operativo (Minimizar)")
-    ax.set_ylabel("f₂: Tiempo de Entrega (Minimizar)")
+    ax.set_xlabel("$f_1$: Costo Operativo (Minimizar)")
+    ax.set_ylabel("$f_2$: Tiempo de Entrega (Minimizar)")
     ax.grid(True, linestyle="--", alpha=0.6)
 
     legend = ax.legend(loc="best", frameon=True, framealpha=0.85)
@@ -120,8 +120,8 @@ def scatter_zoom(
     ax.set_ylim(-1, y_max)
 
     ax.set_title("Zoom al codo del frente: análisis lexicográfico")
-    ax.set_xlabel("f₁: Costo Operativo (Minimizar)")
-    ax.set_ylabel("f₂: Tiempo de Entrega (Minimizar)")
+    ax.set_xlabel("$f_1$: Costo Operativo (Minimizar)")
+    ax.set_ylabel("$f_2$: Tiempo de Entrega (Minimizar)")
     ax.grid(True, linestyle="--", alpha=0.6)
     legend = ax.legend(loc="best", frameon=True, framealpha=0.85)
     legend.get_frame().set_facecolor(theme.FONDO_CREMA)

@@ -45,6 +45,9 @@ def apply_matplotlib_theme() -> None:
 
     mpl.rcParams["font.family"] = "serif"
     mpl.rcParams["font.serif"] = ["Palatino", "Palatino Linotype", "DejaVu Serif"]
+    # mathtext en fuente regular (Palatino) → los subíndices $f_1$/$f_2$ se
+    # renderizan en Palatino y no caen a DejaVu Sans ni a Computer Modern.
+    mpl.rcParams["mathtext.default"] = "regular"
     mpl.rcParams["axes.labelsize"] = 12
     mpl.rcParams["axes.titlesize"] = 14
     mpl.rcParams["legend.fontsize"] = 10
