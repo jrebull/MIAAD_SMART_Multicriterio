@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica: Estrategias de Decisión en Optimización Multicriterio</title>
+    <style>
+        body {
+            background-color: #FDFFE2;
+            color: #1A2130;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 900px;
+            background-color: #FDFFE2;
+            padding: 40px;
+        }
+        header {
+            border-bottom: 2px solid #5A72A0;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+        }
+        h1 { color: #5A72A0; font-size: 2.2rem; margin: 0; }
+        .subtitle { font-style: italic; color: #5A72A0; margin-top: 5px; }
+        h2 { color: #5A72A0; border-left: 5px solid #5A72A0; padding-left: 15px; margin-top: 40px; }
+        h3 { color: #5A72A0; margin-top: 25px; }
+        p { margin-bottom: 15px; }
+        .note {
+            background-color: #eef2f7;
+            border-left: 4px solid #5A72A0;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        pre {
+            background-color: #1A2130;
+            color: #FDFFE2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+        }
+        .task-box {
+            border: 2px dashed #5A72A0;
+            padding: 20px;
+            margin-top: 40px;
+            border-radius: 10px;
+            background-color: #f9fbfd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Práctica de Laboratorio: Análisis de Estrategias Multicriterio</h1>
+            <p class="subtitle">Materia: Optimización Inteligente — Maestría</p>
+        </header>
+
+        <section>
+            <h2>1. Objetivo de la Práctica</h2>
+            <p>El objetivo es comprender cómo el momento en que el tomador de decisiones expresa sus preferencias (A priori vs. A posteriori) altera el resultado final. Analizaremos un problema con dos objetivos en conflicto: <strong>Minimizar Costo Operativo (f1)</strong> y <strong>Minimizar Tiempo de Entrega (f2)</strong>.</p>
+            
+            <div class="note">
+                <strong>Preparación del entorno:</strong> Utilizaremos la librería <code>pymoo</code>. Instálala en tu entorno virtual o en Google Colab usando: <br>
+                <code>pip install pymoo matplotlib numpy</code>
+            </div>
+        </section>
+
+        <section>
+            <h2>2. Definición del Problema</h2>
+            <p>Comenzaremos definiendo nuestro problema base. Copia este código en tu script o celda de Jupyter:</p>
+<pre><code>import numpy as np
+import matplotlib.pyplot as plt
+from pymoo.core.problem import ElementwiseProblem
+
+# Definimos un problema continuo simulando Costo vs Tiempo
+class RoutingProxyProblem(ElementwiseProblem):
+    def __init__(self):
+        super().__init__(n_var=2, n_obj=2, xl=np.array([0.0, 0.0]), xu=np.array([5.0, 5.0]))
+
+    def _evaluate(self, x, out, *args, **kwargs):
+        f1 = 4 * x[0]**2 + 4 * x[1]**2              # f1: Costo Operativo
+        f2 = (x[0] - 5)**2 + (x[1] - 5)**2          # f2: Tiempo de Entrega
+        out["F"] = [f1, f2]
+
+problem = RoutingProxyProblem()</code></pre>
+        </section>
+
+        <section>
+            <h2>3. Estrategia 1: Enfoque A Posteriori (NSGA-II)</h2>
+            <p>Primero, dejaremos que el algoritmo NSGA-II aproxime todo el Frente de Pareto. Una vez obtenido el conjunto de soluciones no dominadas, simularemos la intervención del tomador de decisiones.</p>
+
+<pre><code>from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.optimize import minimize
+
+# 3.1 Ejecutar NSGA-II
+algorithm_nsga2 = NSGA2(pop_size=100)
+res_nsga2 = minimize(problem, algorithm_nsga2, ('n_gen', 100), seed=1, verbose=False)
+
+F_pareto = res_nsga2.F  # Valores de las funciones objetivo en el Frente
+
+# --- POST-PROCESAMIENTO: EL TOMADOR DE DECISIONES ELIGE ---
+
+# A) Elección por Suma Ponderada sobre el Frente (Post-selección)
+# Normalizamos los valores del frente para evaluarlos equitativamente
+F_norm = (F_pareto - F_pareto.min(axis=0)) / (F_pareto.max(axis=0) - F_pareto.min(axis=0))
+
+pesos = np.array([0.7, 0.3]) # 70% importancia al Costo, 30% al Tiempo
+valores_ponderados = np.sum(F_norm * pesos, axis=1)
+idx_mejor_ponderado = np.argmin(valores_ponderados)
+solucion_post_ponderada = F_pareto[idx_mejor_ponderado]
+
+# B) Elección Lexicográfica sobre el Frente (Post-selección)
+# Prioridad 1: Tiempo de entrega (f2). Prioridad 2: Costo (f1).
+# Ordenamos el frente basándonos en f2.
+idx_lexicografico = np.argsort(F_pareto[:, 1])[0] # Tomamos el índice del menor f2
+solucion_post_lexicografica = F_pareto[idx_lexicografico]
+
+print(f"Solución NSGA-II + Suma Ponderada: Costo={solucion_post_ponderada[0]:.2f}, Tiempo={solucion_post_ponderada[1]:.2f}")
+print(f"Solución NSGA-II + Lexicográfica: Costo={solucion_post_lexicografica[0]:.2f}, Tiempo={solucion_post_lexicografica[1]:.2f}")
+</code></pre>
+        </section>
+
+        <section>
+            <h2>4. Estrategia 2: Enfoque A Priori (Monoobjetivo Directo)</h2>
+            <p>Ahora, asumiremos que no tenemos tiempo de calcular el frente de Pareto completo. El tomador de decisiones inyecta sus preferencias matemáticamente <strong>antes</strong> de ejecutar la optimización, convirtiendo el problema en monoobjetivo y resolviéndolo con un Algoritmo Genético Clásico (GA).</p>
+
+<pre><code>from pymoo.algorithms.soo.nonconvex.ga import GA
+
+# A) Suma Ponderada Directa (A Priori)
+class WeightedSumProblem(ElementwiseProblem):
+    def __init__(self):
+        super().__init__(n_var=2, n_obj=1, xl=np.array([0.0, 0.0]), xu=np.array([5.0, 5.0]))
+    def _evaluate(self, x, out, *args, **kwargs):
+        f1 = 4 * x[0]**2 + 4 * x[1]**2
+        f2 = (x[0] - 5)**2 + (x[1] - 5)**2
+        # Escalamiento manual simplificado y aplicación de pesos (0.7, 0.3)
+        out["F"] = 0.7 * (f1 / 200.0) + 0.3 * (f2 / 50.0)
+
+res_apriori_pond = minimize(WeightedSumProblem(), GA(pop_size=100), ('n_gen', 100), seed=1)
+# Evaluamos la solución encontrada en las funciones originales para comparar
+x_pond = res_apriori_pond.X
+f1_pond = 4 * x_pond[0]**2 + 4 * x_pond[1]**2
+f2_pond = (x_pond[0] - 5)**2 + (x_pond[1] - 5)**2
+
+
+# B) Lexicográfica Directa (A Priori)
+# Solo optimizamos el objetivo más importante: Tiempo (f2)
+class LexicographicProblem(ElementwiseProblem):
+    def __init__(self):
+        super().__init__(n_var=2, n_obj=1, xl=np.array([0.0, 0.0]), xu=np.array([5.0, 5.0]))
+    def _evaluate(self, x, out, *args, **kwargs):
+        f2 = (x[0] - 5)**2 + (x[1] - 5)**2
+        out["F"] = f2
+
+res_apriori_lex = minimize(LexicographicProblem(), GA(pop_size=100), ('n_gen', 100), seed=1)
+x_lex = res_apriori_lex.X
+f1_lex = 4 * x_lex[0]**2 + 4 * x_lex[1]**2
+f2_lex = (x_lex[0] - 5)**2 + (x_lex[1] - 5)**2
+
+print(f"Solución GA Ponderado (A Priori): Costo={f1_pond:.2f}, Tiempo={f2_pond:.2f}")
+print(f"Solución GA Lexicográfico (A Priori): Costo={f1_lex:.2f}, Tiempo={f2_lex:.2f}")
+</code></pre>
+        </section>
+
+        <section>
+            <h2>5. Visualización: Scatter Plot</h2>
+            <p>Para el reporte, es fundamental graficar los resultados para entender espacialmente dónde se ubicaron las decisiones.</p>
+<pre><code># Graficamos el Frente de Pareto (Scatter plot) y los puntos seleccionados
+plt.figure(figsize=(10, 6))
+plt.scatter(F_pareto[:, 0], F_pareto[:, 1], s=30, facecolors='none', edgecolors='blue', label='Frente de Pareto (NSGA-II)')
+
+# Puntos A Posteriori
+plt.scatter(solucion_post_ponderada[0], solucion_post_ponderada[1], color='green', marker='*', s=200, label='Post-selección: Ponderada')
+plt.scatter(solucion_post_lexicografica[0], solucion_post_lexicografica[1], color='red', marker='s', s=100, label='Post-selección: Lexicográfica')
+
+# Puntos A Priori
+plt.scatter(f1_pond, f2_pond, color='orange', marker='X', s=150, label='A Priori: GA Ponderado')
+plt.scatter(f1_lex, f2_lex, color='purple', marker='P', s=150, label='A Priori: GA Lexicográfico')
+
+plt.title("Comparativa de Estrategias de Decisión Multicriterio")
+plt.xlabel("f1: Costo Operativo (Minimizar)")
+plt.ylabel("f2: Tiempo de Entrega (Minimizar)")
+plt.legend()
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.show()
+</code></pre>
+        </section>
+
+        <div class="task-box">
+            <h3 style="margin-top: 0; text-align: center;">Entregable: Reporte de Hallazgos (PDF)</h3>
+            <p>Ejecuta el código proporcionado, genera el <strong>Scatter plot</strong> resultante y redacta un reporte en formato PDF que incluya:</p>
+            <ol>
+                <li><strong>La gráfica generada</strong> con la leyenda visible.</li>
+                <li><strong>Análisis de la Suma Ponderada:</strong> ¿Existe una diferencia significativa entre la solución encontrada calculando los pesos <em>a priori</em> con el GA frente a seleccionarla <em>a posteriori</em> del Frente de Pareto generado por NSGA-II? Explica por qué coinciden o difieren.</li>
+                <li><strong>Análisis Lexicográfico:</strong> Al aplicar la estrategia lexicográfica directa minimizando solo f2, ¿qué sucedió con el valor de f1? Compara este valor con el extremo del frente de Pareto de NSGA-II.</li>
+                <li><strong>Conclusión Profesional:</strong> Si fueras el ingeniero consultor de una empresa logística, ¿en qué situación recomendarías invertir tiempo computacional en NSGA-II para mostrar el frente completo, y en qué situación usarías un enfoque directo a priori?</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
